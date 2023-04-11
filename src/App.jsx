@@ -35,16 +35,20 @@ const App = () => {
 			}),
 		};
 
-		const response = await fetch(
-			import.meta.env.VITE_OPEN_AI_API_URL,
-			options,
-		);
-		const json = await response.json();
+		try {
+			const response = await fetch(
+				import.meta.env.VITE_OPEN_AI_API_URL,
+				options,
+			);
+			const json = await response.json();
 
-		const data = json.choices[0].text.trim();
-		console.log(data);
-		setKeywords(json.choices[0].text.trim());
-		setLoading(false);
+			const data = json.choices[0].text.trim();
+
+			setKeywords(json.choices[0].text.trim());
+			setLoading(false);
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	const closeModal = () => {
