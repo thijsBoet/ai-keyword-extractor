@@ -1,7 +1,9 @@
 import { useState } from 'react';
+
 import { Container, Box } from '@chakra-ui/react';
 import Header from './components/Header';
 import TextInput from './components/TextInput';
+import KeywordsModal from './components/KeywordsModal';
 import Footer from './components/Footer';
 
 const App = () => {
@@ -33,18 +35,20 @@ const App = () => {
 			}),
 		};
 
-		try {
-			const response = await fetch(
-				import.meta.env.VITE_OPEN_AI_API_URL,
-				options,
-			);
-			const json = await response.json();
-			console.log(json.choices[0].text.trim());
-			setKeywords(json.choices.text.trim());
-			setLoading(false);
-		} catch (error) {
-			console.error(error);
-		}
+		const response = await fetch(
+			import.meta.env.VITE_OPEN_AI_API_URL,
+			options,
+		);
+		const json = await response.json();
+
+		const data = json.choices[0].text.trim();
+		console.log(data);
+		setKeywords(json.choices[0].text.trim());
+		setLoading(false);
+	};
+
+	const closeModal = () => {
+		setIsOpen(false);
 	};
 
 	return (
@@ -54,6 +58,12 @@ const App = () => {
 				<TextInput extractKeywords={extractKeywords} />
 				<Footer />
 			</Container>
+			<KeywordsModal
+				keywords={keywords}
+				loading={loading}
+				isOpen={isOpen}
+				closeModal={closeModal}
+			/>
 		</Box>
 	);
 };
